@@ -55,7 +55,7 @@ canvas.addEventListener('mousedown', (e) => {
     figuraSeleccionada = buscarFiguras(mouse.x, mouse.y);
     
     if(figuraSeleccionada) {
-        cartel.innerText = "¡Punto dentro de la figura!";
+        cartel.innerText = "Seleccionaste un " + figuraSeleccionada.constructor.name; // Muestra el mensaje con el nombre de la figura
         //calculo la distancia del puntero a
         offsetX = mouse.x - figuraSeleccionada.posX;
         offsetY = mouse.y - figuraSeleccionada.posY;

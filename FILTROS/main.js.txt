@@ -1,0 +1,106 @@
+"use strict"
+
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
+let img = new Image();
+
+// ERROR POSIBLE: Si la imagen es muy grande, no entra en el canvas
+img.onload = () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height); 
+}
+
+// CARGA DE IMAGEN
+function loadImage(file) {
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (e) => {
+        img.src = e.target.result;
+    }
+}
+
+let btnLoad = document.getElementById("btnLoad");
+btnLoad.addEventListener("change", (e) => {
+    let file = e.target.files[0];
+    if(file) loadImage(file);
+});
+
+// DRAG AND DROP (Corregido el cierre de llaves)
+let dropArea = document.getElementById("dropArea");
+dropArea.ondragover = (e) => e.preventDefault();
+dropArea.ondrop = (e) => {
+    e.preventDefault();
+    let file = e.dataTransfer.files[0];
+    if(file) loadImage(file);
+};
+
+// --- FILTRO BLANCO Y NEGRO ---
+let btnFiltroBN = document.getElementById("btnFiltro");
+btnFiltroBN.addEventListener("click", () => {
+    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < imageData.data.length; i += 4) {
+        let r = imageData.data[i];
+        let g = imageData.data[i + 1];
+        let b = imageData.data[i + 2];
+        let promedio = (r + g + b) / 3;
+        
+        imageData.data[i] = promedio;
+        imageData.data[i + 1] = promedio;
+        imageData.data[i + 2] = promedio;
+    }
+    ctx.putImageData(imageData, 0, 0);
+});
+
+// --- FILTRO ROJO ---
+// TU ERROR: No tenías el bucle FOR, por eso no recorría los píxeles.
+let btnFiltroRojo = document.getElementById("btnFiltroRojo");
+btnFiltroRojo.addEventListener("click", () => {
+    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < imageData.data.length; i += 4) {
+        // Dejamos el Rojo igual, pero Verde y Azul a 0
+        imageData.data[i + 1] = 0; 
+        imageData.data[i + 2] = 0;
+    }
+    ctx.putImageData(imageData, 0, 0);
+});
+
+// --- FILTRO BLUR ---
+// TUS ERRORES: 
+// 1. No definías el canal Alpha (transparencia), la imagen quedaba invisible.
+// 2. No validabas los bordes (si nx era negativo, daba error).
+let btnFiltroBlur = document.getElementById("btnFiltroBlur");
+btnFiltroBlur.addEventListener("click", () => {
+    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let copia = ctx.createImageData(canvas.width, canvas.height);
+
+    for (let y = 0; y < canvas.height; y++) {
+        for (let x = 0; x < canvas.width; x++) {
+            let r = 0, g = 0, b = 0;
+            let pixelsContados = 0;
+
+            // Recorremos el kernel 3x3
+            for (let ky = -1; ky <= 1; ky++) {
+                for (let kx = -1; kx <= 1; kx++) {
+                    let nx = x + kx;
+                    let ny = y + ky;
+
+                    // VALIDACIÓN DE BORDES: Solo sumamos si el vecino existe
+                    if (nx >= 0 && nx < canvas.width && ny >= 0 && ny < canvas.height) {
+                        let offset = (ny * canvas.width + nx) * 4;
+                        r += imageData.data[offset];
+                        g += imageData.data[offset + 1];
+                        b += imageData.data[offset + 2];
+                        pixelsContados++;
+                    }
+                }
+            }
+
+            let i = (y * canvas.width + x) * 4;
+            copia.data[i] = r / pixelsContados;
+            copia.data[i + 1] = g / pixelsContados;
+            copia.data[i + 2] = b / pixelsContados;
+            copia.data[i + 3] = 255; // ERROR CRÍTICO: Sin esto es transparente
+        }
+    }
+    ctx.putImageData(copia, 0, 0);
+});
