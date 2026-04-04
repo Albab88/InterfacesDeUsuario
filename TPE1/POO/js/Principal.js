@@ -10,14 +10,16 @@ const CANT_FIGURAS = 20;
 const MOVIMIENTO = 10; // Cantidad de píxeles que se mueve con el teclado
 
 let mouseDown = false;
-
 let figuraSeleccionada = null;
+let figuraArrastrada = null;
+let seleccionadas = []; // Arreglo de las figuras seleccionadas para mover juntas
 
 //variables para ubicar la figura y arrastrar no desde el vertice
 let offsetX = 0;
 let offsetY = 0;
 
 let cartel = document.getElementById("notificacion");
+
 
 //---------------------------- EVENTOS --------------------
 function buscarFiguras(x, y) {
@@ -30,18 +32,15 @@ function buscarFiguras(x, y) {
 
 function redibujar() {
     dibujarCanvas();
-    for(i=0 ; i < Figuras.length; i++) {
-        if(Figuras[i] != figuraSeleccionada) {
+    for(let i=0 ; i < Figuras.length; i++) {
             Figuras[i].draw(ctx);
-        }
     }
-    if(figuraSeleccionada) { //dibuja la seleccionada para que quede arriba
-        figuraSeleccionada.draw(ctx);
+    for(let j = 0; j < seleccionadas.length; j++) { //toma las seleccionadas
+        seleccionadas[j].draw(ctx);
     }
 }
 
-
-// Función auxiliar para obtener la posición real porque el canvasesta centrado y no en la esquina
+// Función auxiliar para obtener la posición real porque el canvas esta centrado y no en la esquina
 function getMousePos(e) {
     let rect = canvas.getBoundingClientRect();
     return {
@@ -52,27 +51,40 @@ function getMousePos(e) {
 
 canvas.addEventListener('mousedown', (e) => {
     let mouse = getMousePos(e); // <--- Usamos la posición corregida
-    figuraSeleccionada = buscarFiguras(mouse.x, mouse.y);
+    let figuraSeleccionada = buscarFiguras(mouse.x, mouse.y);
     
     if(figuraSeleccionada) {
-        cartel.innerText = "Seleccionaste un " + figuraSeleccionada.constructor.name; // Muestra el mensaje con el nombre de la figura
+        mouseDown = true;
+        figuraArrastrada = figuraSeleccionada //me quedo con la figura para moverla con el mouse
+        // Si la figura NO está ya en el arreglo, la agregamos
+        if (!seleccionadas.includes(figuraSeleccionada)) {
+            // Si quieres limitar a máximo 2 como dice la consigna:
+            if (seleccionadas.length < 2) {
+                figuraSeleccionada.select(true);
+                seleccionadas.push(figuraSeleccionada);
+            }
+        }
         //calculo la distancia del puntero a
         offsetX = mouse.x - figuraSeleccionada.posX;
         offsetY = mouse.y - figuraSeleccionada.posY;
-        figuraSeleccionada.select(true);
-        mouseDown = true;
-        redibujar();
+        cartel.innerText = "Seleccionadas: " + seleccionadas.length + " figuras";
+    } else {
+        // Si clickeamos el fondo, deseleccionamos TODAS
+        seleccionadas.forEach(f => f.select(false));
+        seleccionadas = [];
+        cartel.innerText = "Selección limpia";
     }
+    redibujar();
 });
 
 canvas.addEventListener('mousemove', (e) => {
-    if(mouseDown && figuraSeleccionada) {
+    if(mouseDown && figuraArrastrada) {
         let mouse = getMousePos(e);
         // MOVEMOS CONSIDERANDO EL OFFSET
         let newX = mouse.x - offsetX;
         let newY = mouse.y - offsetY;
 
-        figuraSeleccionada.moveTo(newX,newY); //lo mueve a la nueva posicion
+        figuraArrastrada.moveTo(newX,newY); //lo mueve a la nueva posicion
         redibujar();
     }
 });
@@ -80,45 +92,79 @@ canvas.addEventListener('mousemove', (e) => {
 canvas.addEventListener('mouseup', (e) => {
     mouseDown = false;
     cartel.innerText = ""; // El mensaje desaparece al soltar
-    if(figuraSeleccionada !=null) {
-        figuraSeleccionada.select(false);
-        figuraSeleccionada.draw(ctx);
-    }
-    //figuraSeleccionada = null; se saca para que no quede seleccionada con el mouse
 })
 
 //evento mover con el teclado
 //si pongo canvas en lugar de window me mueve toda la pantalla, no la imagen
 window.addEventListener('keydown', (e) => {
     // Si no seleccionaste ninguna figura con el mouse, no hacemos nada
-    if (!figuraSeleccionada) return;
+    if (seleccionadas.length == 0) return;
+    seleccionadas.forEach(figuraSeleccionada => {
     switch (e.key) { //cada caso del teclado
         case 'ArrowUp':
             figuraSeleccionada.moveTo(figuraSeleccionada.posX, figuraSeleccionada.posY - MOVIMIENTO);
+            cartel.innerText = "Estas moviendo hacia arriba"; // Muestra el mensaje con el nombre de la figura
             break;
         case 'ArrowDown':
             figuraSeleccionada.moveTo(figuraSeleccionada.posX, figuraSeleccionada.posY + MOVIMIENTO);
+            cartel.innerText = "Estas moviendo hacia abajo"; // Muestra el mensaje con el nombre de la figura
             break;
         case 'ArrowLeft':
             figuraSeleccionada.moveTo(figuraSeleccionada.posX - MOVIMIENTO, figuraSeleccionada.posY);
+            cartel.innerText = "Estas moviendo hacia la izquierda "; // Muestra el mensaje con el nombre de la figura
             break;
         case 'ArrowRight':
             figuraSeleccionada.moveTo(figuraSeleccionada.posX + MOVIMIENTO, figuraSeleccionada.posY);
+            cartel.innerText = "Estas moviendo hacia la derecha "; // Muestra el mensaje con el nombre de la figura
             break;
         default:
             return; // Si toca cualquier otra tecla, ignoramos el evento
     }
+});
     // Evita que la página web suba o baje al usar las flechas
     e.preventDefault();
     // Refrescamos el canvas para ver el movimiento
     redibujar();
 });
 
+// Al hacer click en el boton llama a crearFigura()
+document.getElementById("btn-dibujar").addEventListener("click", () => {
+    dibujarFiguras(); // Llama a la función que ya fabricaste
+});
+
+document.getElementById("btn-borrar").addEventListener("click", () => {
+    Figuras = []; // Limpia el arreglo
+    figuraSeleccionada = null; // Limpia selección
+    redibujar(); 
+    cartel.innerText = "Figuras borradas - Puedes dibujar otra vez";
+});
+
+const selectorColor = document.getElementById("color-fondo");
+
+selectorColor.addEventListener("input", () => {
+    // Cada vez que el usuario mueva el selector de color, redibujamos
+    redibujar(); 
+});
+
+
+//--------------------------- FIN DE EVENTOS ---------------------------
 
 function dibujarCanvas() {
-    let color = 'rgba(81, 226, 231, 0.7)';
-    let rectangulo = new Rectangulo (0, 0, canvasWidth - 1, canvasHeight - 1, color, true);
+    let colorElegido = document.getElementById("color-fondo").value;
+    //let color = 'rgba(167, 242, 245, 0.8)';
+    let rectangulo = new Rectangulo (0, 0, canvasWidth - 1, canvasHeight - 1, colorElegido, true);
     rectangulo.draw(ctx);
+}
+// Guardamos un color inicial por si sale un cuadrado antes que el primer círculo
+let ultimoColorCirculo = 'rgba(255, 0, 0, 1)'; 
+
+function obtenerComplementario(rgba) {
+    // Buscamos los números dentro del string "rgba(r, g, b, a)"
+    let componentes = rgba.match(/\d+/g);
+    let r = 255 - parseInt(componentes[0]);
+    let g = 255 - parseInt(componentes[1]);
+    let b = 255 - parseInt(componentes[2]);
+    return `rgba(${r}, ${g}, ${b}, 1)`;
 }
 
 function randomRGBA() { //funcion aleatoria de color
@@ -158,11 +204,14 @@ function crearFigura() {
     let Figura = null;
     let valor = Math.random();
     if(valor < 0.25) {
+        //se guarda el color del ultimo circulo que salio
+        ultimoColorCirculo = color;
         Figura = crearCirculo(posX, posY, color);
     } else if(valor >= 0.25 && valor < 0.5){
         Figura = crearRectangulo(posX, posY, color);
     } else if(valor >= 0.5 && valor < 0.75){
-        Figura = crearCuadrado(posX, posY, color);
+        let complementario = obtenerComplementario(ultimoColorCirculo)
+        Figura = crearCuadrado(posX, posY, complementario);
     } else {
         Figura = crearHexagono(posX, posY, color);
     }
@@ -180,5 +229,4 @@ function dibujarFiguras() {
 
 function main() {
     dibujarCanvas();
-    dibujarFiguras();
 }

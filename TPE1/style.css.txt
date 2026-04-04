@@ -1,35 +1,23 @@
+/* Eliminamos el flex del body que causaba problemas de alineación */
 body {
     margin: 0;
     overflow-x: hidden;
-  
     background-color: #f8f9fa; /* Gris clarito */
-}
-/* Esto obliga a que el contenedor principal use todo el ancho sin scroll lateral */
-.container-fluid {
-    padding: 0;
-    overflow-x: hidden;
 }
 
 /* Contenedor del Canvas para aplicar sombra y bordes */
 .canvas-container {
-    border: 5px solid white;
-    background-color: white;
-    max-width: 100%;
-   /* line-height: 0; /* Quita espacios extra debajo del canvas */
+    border: 8px solid #ffffff;
+    line-height: 0; /* Quita espacios extra debajo del canvas */
 }
 
 #canvas {
     cursor: crosshair; /* Cambia el cursor al entrar al canvas */
     display: block;
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
-    border: 2px solid #ecf0f1;
-    max-width: 100%;
-    height: auto;
 }
 
 #notificacion {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: rgb(8, 8, 81); 
     font-weight: bold;
     min-height: 30px; /* Evita que el canvas salte cuando no hay texto */
 }
@@ -37,9 +25,7 @@ body {
 /* Estilo para la tarjeta de instrucciones */
 .instrucciones-card {
     background: #ffffff;
-    border-radius: 15px;
-    max-height:90vh;
-    overflow-y: auto;
+    border-radius: 15px !important;
 }
 
 .instrucciones-card ul li {

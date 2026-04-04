@@ -3,22 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi primer acercamiento a canvas</title>
+    <title>Trabajo Práctico Especial</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body onload = "main()">
-    <div class = "btn">
-        <button id="btn-dibujar">Dibujar</button>
-        <button id="btn-borrar">Empezar de nuevo</button>
-    </div>
-    <div>
-        <h2 id="notificacion"></h2>
-        <canvas id = "canvas" width = "800" height = "600"></canvas>
+<body onload="main()" class="bg-light">
+
+  <div class="container-fluid min-vh-100 d-flex align-items-center">
+    <div class="row w-100 align-items-center">
+        
+        <div class="col-lg-3 p-4">
+            <div class="card shadow border-0 instrucciones-card">
+                <div class="card-body">
+                    <h2 class="h4 card-title border-bottom pb-2">Instrucciones</h2>
+                    <ul class="list-unstyled mt-3">
+                        <li class="mb-3">
+                            <strong>1.</strong> Elegir el color de fondo:
+                            <div class="mt-2 p-2 bg-white border rounded">
+                                <label for="color-fondo" class="form-label small mb-0">Fondo:</label>
+                                <input type="color" id="color-fondo" value="#51e2e7" class="form-control form-control-color w-100">
+                            </div>
+                        </li>
+                        <li class="mb-2"><strong>2.</strong> Click en <b>Dibujar</b>.</li>
+                        <li class="mb-2"><strong>3. Seleccionar:</strong> Click sobre figura.</li>
+                        <li class="mb-2"><strong>4. Mover:</strong> Arrastrar con el mouse o utilizar las <b>flechas</b> del teclado.</li>
+                        <li class="mb-2"><strong>5. Deseleccionar:</strong> Click fondo fuera de todas las figuras.</li>
+                    </ul>
+                    <hr>
+                    <div class="d-grid gap-2">
+                        <button id="btn-dibujar" class="btn btn-primary">Dibujar</button>
+                        <button id="btn-borrar" class="btn btn-outline-danger">Borrar todo</button>
+                    </div>
+                    <br>
+                    <h6 class="h5 card-title border-bottom pb-2">Mover 2 figuras juntas</h6>
+                    <ul class="list-unstyled mt-3 small text-muted">
+                        <li><strong>1.</strong> Click sobre cada una de las figuras.</li>
+                        <li><strong>2.</strong> Usar <b>flechas</b> del teclado para moverlas juntas.</li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <script src="js/Figura.js"></script>
-        <script src="js/Rectangulo.js"></script>
-        <script src="js/Circulo.js"></script>
-        <script src="js/Hexagono.js"></script>
-        <script src="js/Principal.js"></script>
+
+        <div class="col-lg-6 text-center">
+            <h2 id="notificacion" class="mb-3 text-primary h5" style="min-height: 30px;"></h2>
+            <div class="canvas-container shadow-lg d-inline-block rounded bg-white">
+                <canvas id="canvas" width="800" height="600"></canvas>
+            </div>
+        </div>
+
+        <div class="col-lg-3 d-none d-lg-block">
+            </div>
+
+    <script src="js/Figura.js"></script>
+    <script src="js/Rectangulo.js"></script>
+    <script src="js/Circulo.js"></script>
+    <script src="js/Hexagono.js"></script>
+    <script src="js/Principal.js"></script>
 </body>
 </html>
