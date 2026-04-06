@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPE 1</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="info">
+        <div class="selecciones">
+            <h2>Figura seleccionada:</h2>
+            <h3 id="soy">Ninguna aún</h3>
+        </div>
+        <p>Para comenzar hacer click en el botón <span>Figuras principales</span> y creará figuras al azar.</p>
+        <p>Puedes crear nuevas figuras como triangulos y rombos al oprimir el boton <span>Nuevas figuras</span> (una por cada vez
+            que oprimas el botón).</p>
+        <p>Puedes mover las figuras utilizando el mouse haciendo click sobre ellas y arrastrarlas. O puedes usar las
+            teclas direccionales o W-A-S-D.</p>
+        <p>Puedes seleccionar hasta dos figuras a la vez utilizando el cursor y haciendo click sobre ellas, y luego
+            moverlas con las teclas antes mencionadas.</p>
+        <p>El botón <span>Redibujar</span> que aparece una vez que se oprime el botón <span>Figuras principales</span>, borrará
+            todas las figuras y comenzando de nuevo.</p>
+        <p>El botón <span>Borrar Figuras</span> eliminará todas las figuras actuales del canvas.</p>
+    </div>
+
+    <div>
+        <canvas id="canvas" width="800" height="600"></canvas>
+    </div>
+    <div class="botones">
+        <h3>Botones de creación</h3>
+        <button class="btn" id="dibujar">Figuras principales</button>
+        <button class="btn" id="figExt">Nuevas figuras</button>
+        <button class="btn" id="limpiar">Borrar Figuras</button>
+    </div>
+
+    <script type="module" src="./js/Principal.js"></script>
+</body>
+
+</html>
