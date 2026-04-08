@@ -46,7 +46,8 @@ dropArea.ondragenter = (e) => {
     let btnFiltroBN = document.getElementById("btn-FiltroBN");
     btnFiltroBN.addEventListener("click", () => {
         let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        console.log(imageData);
+        //let data = imageData.data;
+        //console.log(imageData);
 
         let index;
         let r, g, b;
@@ -75,9 +76,12 @@ dropArea.ondragenter = (e) => {
     let btnFiltroRojo = document.getElementById("btn-FiltroRojo");
         btnFiltroRojo.addEventListener("click", () => {
             let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            let index;
+            let r;
             for(let y = 0; y < canvas.height ; y++){
                 for(let x = 0; x < canvas.width; x++){
-
+                    index = (y * canvas.width + x) * 4;
+                    r = imageData.data[index];
                     imageData.data[index] = r;
                     imageData.data[index + 1] = 0;
                     imageData.data[index + 2] = 0;
