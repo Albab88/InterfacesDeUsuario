@@ -1,0 +1,66 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #1e1e2f;
+    color: white;
+}
+
+.app {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    grid-template-rows: 60px 1fr;
+    height: 100vh;
+}
+
+header {
+    grid-column: 1 / 3;
+    background: #27293d;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.toolbar {
+    background: #2f324a;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tool {
+    padding: 10px;
+    border: none;
+    background: #44476a;
+    color: white;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.2s;
+    text-align: center;
+}
+
+.tool:hover {
+    background: #5c5f8a;
+}
+
+/* Botón de upload estilo */
+.upload {
+    display: block;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}

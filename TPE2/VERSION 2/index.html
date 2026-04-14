@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Canvas Creativo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app">
+
+    <header>
+        <h1>🎨 Canvas Creativo</h1>
+    </header>
+
+    <aside class="toolbar">
+        <button class="tool" id="pencilBtn">✏️ Lápiz</button>
+        <button class="tool" id="eraserBtn">🧽 Goma</button>
+
+        <button class="tool" id="undoBtn">↩️ Deshacer</button>
+        <button class="tool" id="clearBtn">🗑️ Borrar todo</button>
+
+        <label>Color</label>
+        <input type="color" id="colorPicker">
+
+        <label>Tamaño</label>
+        <input type="range" id="sizeInput" min="1" max="20" value="5">
+
+        <button class="tool" id="saveBtn">💾 Guardar</button>
+
+        <label class="tool upload">
+            📂 Cargar imagen
+            <input type="file" id="uploadInput" accept="image/*" hidden>
+        </label>
+    </aside>
+
+    <main>
+        <canvas id="canvas"></canvas>
+    </main>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

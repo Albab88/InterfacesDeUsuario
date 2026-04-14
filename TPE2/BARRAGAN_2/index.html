@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Canvas Creativo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app">
+
+    <header>
+        <h1>🎨 Canvas Creativo</h1>
+    </header>
+
+    <aside class="toolbar">
+        <button class="tool">✏️ Lápiz</button>
+        <button class="tool">🖍️ Marcador</button>
+        <button class="tool">🧽 Borrar</button>
+
+        <label>Color</label>
+        <input type="color" id="colorPicker">
+
+        <label>Tamaño</label>
+        <input type="range" min="1" max="20">
+    </aside>
+
+    <main>
+        <canvas id="canvas"></canvas>
+    </main>
+
+</div>
+
+<script src="js.js"></script>
+</body>
+</html>
