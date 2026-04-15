@@ -1,6 +1,7 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+//esto deja el tamaño fijo, pero se puede hacer que se adapte al tamaño de la ventana con window.innerWidth/Height
 canvas.width = 1024;
 canvas.height = 768;
 
@@ -10,7 +11,7 @@ let currentTool = "pencil";
 let color = "#000000";
 let brushSize = 5;
 
-// Historial
+// Historial para ver hasta donde elimina con el boton deshacer
 let history = [];
 
 // UI
@@ -23,6 +24,10 @@ const uploadInput = document.getElementById("uploadInput");
 
 const colorPicker = document.getElementById("colorPicker");
 const sizeInput = document.getElementById("sizeInput");
+
+const toggleFiltros = document.getElementById("toggleFiltros");
+const filtrosMenu = document.getElementById("filtrosMenu");
+
 
 // =====================
 // DIBUJO
@@ -142,4 +147,11 @@ uploadInput.addEventListener("change", (e) => {
     };
 
     reader.readAsDataURL(file);
+});
+
+// =====================
+// DESPLEGAR EL MENU DE FILTROS
+// =====================
+toggleFiltros.addEventListener("click", () => {
+    filtrosMenu.classList.toggle("open");
 });
