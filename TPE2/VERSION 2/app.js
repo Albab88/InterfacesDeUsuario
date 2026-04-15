@@ -28,10 +28,7 @@ const sizeInput = document.getElementById("sizeInput");
 const toggleFiltros = document.getElementById("toggleFiltros");
 const filtrosMenu = document.getElementById("filtrosMenu");
 
-
-// =====================
-// DIBUJO
-// =====================
+// Dibujar
 
 function startDrawing(e) {
     drawing = true;
@@ -63,9 +60,7 @@ function stopDrawing() {
     ctx.closePath();
 }
 
-// =====================
-// HISTORIAL
-// =====================
+// Historial de veces para hacer el deshacer
 
 function saveState() {
     history.push(canvas.toDataURL());
