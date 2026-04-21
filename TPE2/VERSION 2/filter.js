@@ -2,8 +2,6 @@
     let btnFiltroBN = document.getElementById("btn-FiltroBN");
     btnFiltroBN.addEventListener("click", () => {
         let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        //let data = imageData.data;
-        //console.log(imageData);
 
         let index;
         let r, g, b;
@@ -16,7 +14,6 @@
                 r = imageData.data[index];
                 g = imageData.data[index + 1];
                 b = imageData.data[index + 2];
-
                 promedio = parseInt((r + g + b) / 3);
 
                 imageData.data[index] = promedio;
@@ -27,6 +24,22 @@
         //genera la nueva imagen con el filtro aplicado
         ctx.putImageData(imageData, 0, 0);
     });
+
+    //filtro sepia
+    let btnFiltroSepia = document.getElementById("btn-FiltroSepia");
+    btnFiltroSepia.addEventListener("click", () => {
+        let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);    
+        for(let i = 0; i < imageData.data.length; i += 4){
+            let r = imageData.data[i];
+            let g = imageData.data[i + 1];
+            let b = imageData.data[i + 2];
+            imageData.data[i] = Math.min(255, 0.393 * r + 0.769 * g + 0.189 * b);
+            imageData.data[i + 1] = Math.min(255, 0.349 * r + 0.686 * g + 0.168 * b);
+            imageData.data[i + 2] = Math.min(255, 0.272 * r + 0.534 * g + 0.131 * b);
+        }
+        ctx.putImageData(imageData, 0, 0);
+    });
+
 
     //filtro todo rojo
     let btnFiltroRojo = document.getElementById("btn-FiltroRojo");
@@ -46,7 +59,20 @@
         ctx.putImageData(imageData, 0, 0);
         });
 
-    //filtro blur
+    
+    //filtro negativo
+let btnFiltroNegativo = document.getElementById("btn-FiltroNegativo");
+btnFiltroNegativo.addEventListener("click", () => {
+    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    for(let i = 0; i < imageData.data.length; i += 4){
+        imageData.data[i] = 255 - imageData.data[i];
+        imageData.data[i + 1] = 255 - imageData.data[i + 1];
+        imageData.data[i + 2] = 255 - imageData.data[i + 2];
+    }
+    ctx.putImageData(imageData, 0, 0);
+});
+
+    //filtro blur - ver como cambiar el alpha
     let btnFiltroBlur = document.getElementById("btn-FiltroBlur");
     btnFiltroBlur.addEventListener("click", () => {
     let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -87,3 +113,4 @@
     }
     ctx.putImageData(copiaimageData, 0, 0);
 });
+

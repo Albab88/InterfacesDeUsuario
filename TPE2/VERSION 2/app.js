@@ -5,7 +5,7 @@ const ctx = canvas.getContext("2d");
 canvas.width = 1024;
 canvas.height = 768;
 
-// Estado
+// Estado inicial del lapiz
 let drawing = false;
 let currentTool = "pencil";
 let color = "#000000";
@@ -29,7 +29,6 @@ const toggleFiltros = document.getElementById("toggleFiltros");
 const filtrosMenu = document.getElementById("filtrosMenu");
 
 // Dibujar
-
 function startDrawing(e) {
     drawing = true;
     ctx.beginPath();
@@ -67,6 +66,7 @@ function saveState() {
     if (history.length > 20) history.shift();
 }
 
+// funcion para deshacer el ultimo cambio
 function undo() {
     if (history.length === 0) return;
 

@@ -1,0 +1,163 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background:rgb(31, 31, 31);
+    color: white;
+}
+
+.app {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    grid-template-rows: 60px 1fr;
+    height: 100vh;
+}
+
+/*Estructura del header con su distribucion*/
+header {
+    grid-column: 1 / 3;
+    background: rgb(44, 44, 44);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+/*Icono del header*/
+.icon {
+    width: 60px;
+    height: 60px;
+    margin-left: 15px;
+}
+
+.toolbar {
+    background:rgb(44, 44, 44);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tool {
+    padding: 10px;
+    border: none;
+    background: rgb(92, 92, 92);
+    color: white;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.2s;
+    text-align: center;
+}
+
+.tool:hover {
+    background: rgb(123, 17, 43);
+    box-shadow: 0 0 8px  rgba(68, 2, 19, 0.655);
+}
+
+/* Estilo general del input */
+.sizeInput {
+    width: 100%;
+    margin-top: 5px;
+    cursor: pointer;
+    
+    /* Eliminamos el estilo default */
+    -webkit-appearance: none;
+    appearance: none;
+    
+    background: transparent;
+}
+
+/* =========================
+   TRACK (la barra)
+========================= */
+.sizeInput::-webkit-slider-runnable-track {
+    height: 6px;
+    background: #555; /* gris medio */
+    border-radius: 5px;
+}
+
+.sizeInput::-moz-range-track {
+    height: 6px;
+    background: #555;
+    border-radius: 5px;
+}
+
+/* =========================
+   THUMB (el circulito)
+========================= */
+.sizeInput::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #888; /* gris claro */
+    /*border: 2px solid #300000; /* bordo oscuro */
+    border: 2px rgb(123, 17, 43);
+    margin-top: -5px; /* centra el círculo */
+    /*transition: 0.2s;*/
+}
+
+.sizeInput::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #888;
+    /*border: 2px solid #300000;*/
+    border: 2px rgb(123, 17, 43);
+    transition: 0.2s;
+}
+
+/* =========================
+   HOVER (cuando pasás el mouse)
+========================= */
+/* En Chrome, el hover se aplica al thumb, no al track */
+.sizeInput::-webkit-slider-thumb:hover {
+    background: rgb(123, 17, 43);
+    /*background: #300000; /* bordo */
+}
+
+/* En Firefox, el hover se aplica al thumb, no al track */
+.sizeInput::-moz-range-thumb:hover {
+    background: rgb(123, 17, 43);
+    /*background: #300000;*/
+}
+
+/* Botón de upload estilo */
+.upload {
+    display: block;
+}
+
+/* Contenedor colapsable */
+.collapse {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    margin-left: 5px;
+    padding-left: 5px;
+    border-left: 2px solid #444;
+}
+
+/* Estado abierto */
+.collapse.open {
+    max-height: 800px; /* suficiente para los botones */
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 30px  rgba(68, 2, 19, 0.298);
+}
