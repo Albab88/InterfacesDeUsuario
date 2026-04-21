@@ -31,7 +31,7 @@ class App {
 
         // UI Menús
         document.getElementById("toggleFiltros").onclick = () => {
-            document.getElementById("filtrosMenu").classList.toggle("open");
+        document.getElementById("filtrosMenu").classList.toggle("open");
         };
 
         // Filtros
@@ -73,7 +73,7 @@ class App {
 
     saveImage() {
     // Pedirle el nombre al usuario mediante una ventana emergente
-    let nombreArchivo = prompt("Ingresa el nombre para tu dibujo:", "mi-dibujo");
+    let nombreArchivo = prompt("Ingresa el nombre para tu dibujo:");
     // Si el usuario cancela el prompt, nombreArchivo será null. 
     if (nombreArchivo === null) return;
     // Validar que no esté vacío, si lo está, ponemos uno por defecto

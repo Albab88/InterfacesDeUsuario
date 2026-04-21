@@ -115,7 +115,7 @@ class Filter {
             for(let i = 0; i < imageData.data.length; i += 4){
                 imageData.data[i] = 255 - imageData.data[i];
                 imageData.data[i + 1] = 255 - imageData.data[i + 1];
-            imageData.data[i + 2] = 255 - imageData.data[i + 2];
+                imageData.data[i + 2] = 255 - imageData.data[i + 2];
         }
         ctx.putImageData(imageData, 0, 0);
         }
@@ -126,7 +126,7 @@ class Filter {
             const canvas = paint.canvas;
             let imageData = paint.ctx.getImageData(0, 0, paint.canvas.width, paint.canvas.height);
             let copiaimageData = paint.ctx.createImageData(paint.canvas.width, paint.canvas.height);
-
+            //agregar la matriz del kernel
             let kernelSize = 3;
             let limit = Math.floor(kernelSize / 2);
 
