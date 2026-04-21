@@ -35,10 +35,21 @@ class App {
         };
 
         // Filtros
+        /*document.getElementById("brillo").oninput = (e) => {
+            this.paint.saveState();
+            const valorBrillo = parseInt(e.target.value);
+            Filter.aplicarFiltroBrillo(this.paint, valorBrillo);
+        };*/
+
         document.getElementById("btn-FiltroBN").onclick = () => {
             this.paint.saveState();      // Primero Paint guarda el historial
             Filter.aplicarFiltroBN(this.paint); // Luego la clase estática procesa
         };
+
+        document.getElementById("btn-FiltroBinarizacion").onclick = () => {
+            this.paint.saveState();
+            Filter.aplicarFiltroBinarizacion(this.paint);
+        }
 
         document.getElementById("btn-FiltroSepia").onclick = () => {
             this.paint.saveState();

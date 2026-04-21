@@ -30,9 +30,13 @@ class Paint {
         this.ctx.lineCap = "round";
 
         if (this.currentTool === "eraser") {
+            //dejar marcado el boton de la goma
+            document.getElementById("eraserBtn").classList.add("active");
             //la siguiente línea hace que el trazo del borrador sea transparente, eliminando lo que hay debajo
             this.ctx.globalCompositeOperation = "destination-out";
         } else {
+            //dejar marcado el boton del lapiz
+            document.getElementById("pencilBtn").classList.add("active");
             // Si es lápiz, aseguramos que el trazo sea normal y del color seleccionado
             this.ctx.globalCompositeOperation = "source-over";
             this.ctx.strokeStyle = this.color;
@@ -77,7 +81,13 @@ class Paint {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    setTool(tool) { this.currentTool = tool; }
-    setColor(color) { this.color = color; }
-    setSize(size) { this.brushSize = size; }
+    setTool(tool) { 
+        this.currentTool = tool; 
+    }
+    setColor(color) { 
+        this.color = color; 
+    }
+    setSize(size) { 
+        this.brushSize = size; 
+    }
 }

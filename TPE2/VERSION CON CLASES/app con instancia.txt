@@ -1,0 +1,31 @@
+class App {
+    constructor() {
+        this.paint = new Paint("canvas");
+        this.filter = new Filter(); // ahora tenés un objeto Filter
+        this.initEventListeners();
+    }
+
+    initEventListeners() {
+        const { canvas } = this.paint;
+
+        // ... tus eventos de dibujo
+
+        // Filtros
+        document.getElementById("btn-FiltroBN").onclick = () => {
+            this.paint.saveState();
+            this.filter.aplicarFiltroBN(this.paint);
+        };
+
+        document.getElementById("btn-FiltroBinarizacion").onclick = () => {
+            this.paint.saveState();
+            this.filter.aplicarFiltroBinarizacion(this.paint);
+        };
+
+        document.getElementById("btn-FiltroSepia").onclick = () => {
+            this.paint.saveState();
+            this.filter.aplicarFiltroSepia(this.paint);
+        };
+
+        // y así con los demás filtros...
+    }
+}

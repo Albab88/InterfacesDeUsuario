@@ -3,6 +3,26 @@ class Filter {
         return paint.ctx.getImageData(0, 0, paint.canvas.width, paint.canvas.height);
     }
 
+// filtro de brillo
+    //genero un metodo auxiliar para que el color se quede entre 0 y 255, evitando que se sobrepase el limite
+    /*static rangoColor(valor) {
+        if(valor < 0) return 0;
+        if(valor > 255) return 255;
+        return valor;
+    }
+
+    static aplicarFiltroBrillo(paint, valorBrillo) {
+        const ctx = paint.ctx;
+        const canvas = paint.canvas;
+        let imageData = this.getImageData(paint);
+
+        for(let i = 0; i < imageData.data.length; i += 4){
+            imageData.data[i] = Math.min(255, imageData.data[i] + valorBrillo); // R
+            imageData.data[i + 1] = Math.min(255, imageData.data[i + 1] + valorBrillo); // G
+            imageData.data[i + 2] = Math.min(255, imageData.data[i + 2] + valorBrillo); // B
+        }
+        paint.ctx.putImageData(imageData, 0, 0);
+    }*/
 
 //el filtro es blanco y negro
         static aplicarFiltroBN(paint) {
@@ -14,9 +34,9 @@ class Filter {
             let r, g, b;
             let promedio;
 
-            for(let y = 0; y < canvas.height ; y++){
-                for(let x = 0; x < canvas.width; x++){
-                    index = (y * canvas.width + x) * 4;
+            for(let i = 0; i < canvas.height ; i++){
+                for(let j = 0; j < canvas.width; j++){
+                    index = (i * canvas.width + j) * 4;
 
                     r = imageData.data[index];
                     g = imageData.data[index + 1];
@@ -31,6 +51,37 @@ class Filter {
             //genera la nueva imagen con el filtro aplicado
             ctx.putImageData(imageData, 0, 0);
         }
+
+    //filtro para binarizar
+static aplicarFiltroBinarizacion(paint) {
+    const ctx = paint.ctx;
+    const canvas = paint.canvas;
+    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+    for (let y = 0; y < imageData.height; y++) {
+        for (let x = 0; x < imageData.width; x++) {
+            let index = (y * imageData.width + x) * 4;
+            let r = imageData.data[index];
+            let g = imageData.data[index + 1];
+            let b = imageData.data[index + 2];
+            let value = (r + g + b) / 3; // promedio
+            //determina hasta que valor se vuelve blanco y hasta que valor se vuelve negro
+            if (value < 128) {
+                value = 0;
+            } else {
+                value = 255;
+            }
+
+            imageData.data[index]     = value; // R
+            imageData.data[index + 1] = value; // G
+            imageData.data[index + 2] = value; // B
+            // mantenemos el alfa igual
+        }
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+}
+
 
     //filtro sepia
         static aplicarFiltroSepia(paint) {

@@ -1,0 +1,41 @@
+class Filter {
+    constructor(threshold = 128) {
+        // Podés guardar parámetros configurables, por ejemplo el umbral de binarización
+        this.threshold = threshold;
+    }
+
+    aplicarFiltroBinarizacion(paint) {
+        let imageData = paint.getImageData();
+
+        for (let y = 0; y < imageData.height; y++) {
+            for (let x = 0; x < imageData.width; x++) {
+                let index = (y * imageData.width + x) * 4;
+
+                let r = imageData.data[index];
+                let g = imageData.data[index + 1];
+                let b = imageData.data[index + 2];
+
+                let value = (r + g + b) / 3;
+                value = value < this.threshold ? 0 : 255;
+
+                imageData.data[index]     = value;
+                imageData.data[index + 1] = value;
+                imageData.data[index + 2] = value;
+                // Alfa se mantiene igual
+            }
+        }
+
+        paint.ctx.putImageData(imageData, 0, 0);
+    }
+
+    aplicarFiltroBN(paint) {
+        let imageData = paint.getImageData();
+        for (let i = 0; i < imageData.data.length; i += 4) {
+            let avg = (imageData.data[i] + imageData.data[i+1] + imageData.data[i+2]) / 3;
+            imageData.data[i] = imageData.data[i+1] = imageData.data[i+2] = avg;
+        }
+        paint.ctx.putImageData(imageData, 0, 0);
+    }
+
+    // Podés seguir con sepia, rojo, verde, azul, etc. como métodos de instancia
+}
