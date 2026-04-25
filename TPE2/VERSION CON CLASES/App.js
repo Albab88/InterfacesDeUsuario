@@ -35,11 +35,19 @@ class App {
         };
 
         // Filtros
-        /*document.getElementById("brillo").oninput = (e) => {
+        /*esto es para deslizar y no funciona bien
+        document.getElementById("brillo").oninput = (e) => {
             this.paint.saveState();
             const valorBrillo = parseInt(e.target.value);
             Filter.aplicarFiltroBrillo(this.paint, valorBrillo);
         };*/
+
+           document.getElementById("btn-FiltroBrillo").onclick = () => {
+            this.paint.saveState();
+            //le doy un valor fijo de aumento de brillo cada vez que hace click
+            const valorBrillo = 10;
+            Filter.aplicarFiltroBrillo(this.paint, valorBrillo);
+        };
 
         document.getElementById("btn-FiltroBN").onclick = () => {
             this.paint.saveState();      // Primero Paint guarda el historial
@@ -80,14 +88,23 @@ class App {
             this.paint.saveState();
             Filter.aplicarFiltroBlur(this.paint);
         };
+
+        document.getElementById("btn-FiltroBordes").onclick = () => {
+            this.paint.saveState();
+            Filter.aplicarFiltroBordes(this.paint);
+        };
+
+        document.getElementById("btn-FiltroDetalles").onclick = () => {
+            this.paint.saveState();
+            Filter.aplicarFiltroDetalles(this.paint);
+        };
     }
 
     saveImage() {
     // Pedirle el nombre al usuario mediante una ventana emergente
     let nombreArchivo = prompt("Ingresa el nombre para tu dibujo:");
-    // Si el usuario cancela el prompt, nombreArchivo será null. 
-    if (nombreArchivo === null) return;
-    // Validar que no esté vacío, si lo está, ponemos uno por defecto
+    if (nombreArchivo === null) 
+        return;
     if (nombreArchivo.trim() === "") {
         nombreArchivo = "sin-titulo";
     }

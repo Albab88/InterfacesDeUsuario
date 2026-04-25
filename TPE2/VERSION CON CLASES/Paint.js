@@ -10,12 +10,12 @@ class Paint {
         this.canvas.height = 768;
         
         this.drawing = false;
-        this.currentTool = "pencil";
         this.color = "#000000";
         this.brushSize = 5;
         this.history = [];
     }
 
+    //funcion para comenzar a dibujar
     startDrawing(x, y) {
         this.saveState();
         this.drawing = true;
@@ -29,14 +29,20 @@ class Paint {
         this.ctx.lineWidth = this.brushSize;
         this.ctx.lineCap = "round";
 
+         // Primero quitamos la clase "active" de todos los botones de herramientas
+        //document.getElementById("pencilBtn").classList.remove("active");
+        //document.getElementById("eraserBtn").classList.remove("active");
+
         if (this.currentTool === "eraser") {
             //dejar marcado el boton de la goma
             document.getElementById("eraserBtn").classList.add("active");
+            document.getElementById("pencilBtn").classList.remove("active");
             //la siguiente línea hace que el trazo del borrador sea transparente, eliminando lo que hay debajo
             this.ctx.globalCompositeOperation = "destination-out";
         } else {
             //dejar marcado el boton del lapiz
             document.getElementById("pencilBtn").classList.add("active");
+            document.getElementById("eraserBtn").classList.remove("active");
             // Si es lápiz, aseguramos que el trazo sea normal y del color seleccionado
             this.ctx.globalCompositeOperation = "source-over";
             this.ctx.strokeStyle = this.color;
@@ -56,7 +62,11 @@ class Paint {
         if (this.history.length > 20) this.history.shift();
     }
 
+    //funcion deshacer
     undo() {
+        document.getElementById("pencilBtn").classList.remove("active");
+        document.getElementById("eraserBtn").classList.remove("active");
+        document.getElementById("saveBtn").classList.remove("active");
         if (this.history.length === 0) {
             // Si no hay historial, simplemente limpia el canvas
             this.clear();
@@ -70,7 +80,11 @@ class Paint {
         };
     }
 
+    //funcion borrar el canvas
     clear(save = true) {
+        document.getElementById("pencilBtn").classList.remove("active");
+        document.getElementById("eraserBtn").classList.remove("active");
+
         //preguntar antes de borrar
         if (save) {
             if (!confirm("¿Estás seguro de que quieres borrar? Perderás todos los cambios.")) {

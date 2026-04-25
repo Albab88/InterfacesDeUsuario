@@ -29,7 +29,7 @@
 
         <button class="tool" id="saveBtn"> 💾 Guardar</button>
 
-        <label class="tool upload"> 📂 Cargar imagen
+        <label class="tool"> 📂 Cargar imagen
             <input type="file" id="uploadInput" accept="image/*" hidden>
         </label>
 
@@ -39,11 +39,12 @@
 
             <div id="filtrosMenu" class="collapse">
                 <br>
-                <label>Brillo</label>
+                <!--<label>Brillo</label>
                 <input type="range" min="-100" max="100" value="0" class="sizeInput" id="brillo">
                 <label>Constraste</label>
-                <input type="range" min="-100" max="100" value="0" class="sizeInput" id="contraste">
+                <input type="range" min="-100" max="100" value="0" class="sizeInput" id="contraste">-->
                 <br>
+                <button class="tool filtroBtn" id="btn-FiltroBrillo">Brillo</button>
                 <button class="tool filtroBtn" id="btn-FiltroBN">Escala de grises</button>
                 <button class="tool filtroBtn" id="btn-FiltroBinarizacion">Binarización</button>
                 <button class="tool filtroBtn" id="btn-FiltroSepia">Sepia</button>
@@ -52,6 +53,8 @@
                 <button class="tool filtroBtn" id="btn-FiltroAzul">Azul</button>
                 <button class="tool filtroBtn" id="btn-FiltroNegativo">Negativo</button>
                 <button class="tool filtroBtn" id="btn-FiltroBlur">Blur</button>
+                <button class="tool filtroBtn" id="btn-FiltroBordes">Detección de bordes</button>
+                <button class="tool filtroBtn" id="btn-FiltroDetalles">Resaltar detalles</button>
             </div>
         </div>
     </aside>

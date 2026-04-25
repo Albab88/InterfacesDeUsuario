@@ -3,9 +3,34 @@ class Filter {
         return paint.ctx.getImageData(0, 0, paint.canvas.width, paint.canvas.height);
     }
 
-// filtro de brillo
+   /* // En filter.js
+static aplicarFiltroBrillo(paint, valorBrillo, originalImageData) {
+    if (!originalImageData) return;
+
+    const ctx = paint.ctx;
+    const canvas = paint.canvas;
+    
+    // Creamos una nueva instancia de ImageData basada en la original para no sobrescribir la original
+    let nuevaImagen = new ImageData(
+        new Uint8ClampedArray(originalImageData.data), 
+        originalImageData.width, 
+        originalImageData.height
+    );
+
+    for (let i = 0; i < nuevaImagen.data.length; i += 4) {
+        // Aplicamos el brillo SIEMPRE partiendo de los valores originales
+        nuevaImagen.data[i]     = this.rangoColor(originalImageData.data[i] + valorBrillo);     // R
+        nuevaImagen.data[i + 1] = this.rangoColor(originalImageData.data[i + 1] + valorBrillo); // G
+        nuevaImagen.data[i + 2] = this.rangoColor(originalImageData.data[i + 2] + valorBrillo); // B
+        // El Alpha (i+3) se mantiene igual
+    }
+
+    ctx.putImageData(nuevaImagen, 0, 0);
+}*/
+
+// filtro de brillo este es el que anda
     //genero un metodo auxiliar para que el color se quede entre 0 y 255, evitando que se sobrepase el limite
-    /*static rangoColor(valor) {
+    static rangoColor(valor) {
         if(valor < 0) return 0;
         if(valor > 255) return 255;
         return valor;
@@ -15,6 +40,7 @@ class Filter {
         const ctx = paint.ctx;
         const canvas = paint.canvas;
         let imageData = this.getImageData(paint);
+        let originalImageData = imageData.data;
 
         for(let i = 0; i < imageData.data.length; i += 4){
             imageData.data[i] = Math.min(255, imageData.data[i] + valorBrillo); // R
@@ -22,7 +48,35 @@ class Filter {
             imageData.data[i + 2] = Math.min(255, imageData.data[i + 2] + valorBrillo); // B
         }
         paint.ctx.putImageData(imageData, 0, 0);
-    }*/
+        //volver al valor original del brillo
+        ctx.putImageData(this.ImageData, 0, 0);
+
+    }
+    /*static aplicarFiltroBrillo(paint, valorBrillo) {
+    const ctx = paint.ctx;
+    const canvas = paint.canvas;
+
+    // Guardar la imagen original una sola vez
+    if (!this.originalImageData) {
+        this.originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    }
+
+    // Clonar la imagen original para aplicar el filtro
+    let imageData = new ImageData(
+        new Uint8ClampedArray(this.originalImageData.data),
+        this.originalImageData.width,
+        this.originalImageData.height
+    );
+
+    for (let i = 0; i < imageData.data.length; i += 4) {
+        imageData.data[i] = Math.min(255, imageData.data[i] + valorBrillo);     // R
+        imageData.data[i + 1] = Math.min(255, imageData.data[i + 1] + valorBrillo); // G
+        imageData.data[i + 2] = Math.min(255, imageData.data[i + 2] + valorBrillo); // B
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+}
+ */
 
 //el filtro es blanco y negro
         static aplicarFiltroBN(paint) {
@@ -212,6 +266,112 @@ static aplicarFiltroBinarizacion(paint) {
             }
         }
         ctx.putImageData(copiaimageData, 0, 0);
-}
+    }
+
+    //funcion para deteccion de bordes con filtro sobel
+    static aplicarFiltroBordes(paint) {
+    const canvas = paint.canvas;       // el canvas dentro de tu objeto paint
+    const ctx = paint.ctx;             // el contexto que ya usás en paint
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = imageData.data;
+
+    // Escala de grises
+    let gris = new Array(canvas.width * canvas.height);
+    for (let i = 0; i < gris.length; i++) {
+        const r = pixels[i * 4];
+        const g = pixels[i * 4 + 1];
+        const b = pixels[i * 4 + 2];
+        gris[i] = 0.299 * r + 0.587 * g + 0.114 * b;
+    }
+
+    // Máscaras Sobel
+    const sobelX = [
+        [-1,0,1],
+        [-2,0,2],
+        [-1,0,1]
+    ];
+    const sobelY = [
+        [-1,-2,-1],
+        [0,0,0],
+        [1,2,1]];
+
+    let output = new Uint8ClampedArray(gris.length * 4);
+
+    for (let y = 1; y < canvas.height - 1; y++) {
+        for (let x = 1; x < canvas.width - 1; x++) {
+        let gx = 0, gy = 0;
+
+        for (let ky = -1; ky <= 1; ky++) {
+            for (let kx = -1; kx <= 1; kx++) {
+            const pixel = gris[(y + ky) * canvas.width + (x + kx)];
+            gx += sobelX[ky + 1][kx + 1] * pixel;
+            gy += sobelY[ky + 1][kx + 1] * pixel;
+            }
+        }
+
+        const magnitude = Math.min(255, Math.sqrt(gx * gx + gy * gy));
+        const index = (y * canvas.width + x) * 4;
+
+        output[index] = magnitude;
+        output[index + 1] = magnitude;
+        output[index + 2] = magnitude;
+        output[index + 3] = 255;
+        }
+    }
+
+    const resultImage = new ImageData(output, canvas.width, canvas.height);
+    ctx.putImageData(resultImage, 0, 0);
+    }
+
+//filtro para resaltar bordes
+    static aplicarFiltroDetalles(paint) {
+    const canvas = paint.canvas;
+    const ctx = paint.ctx;
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = imageData.data;
+
+   /* const kernel = [
+    [0, -1, 0],
+    [-1, 5, -1],
+    [0, -1, 0]
+    ];*/
+
+   const kernel = [
+    [-1, -1, -1], 
+    [-1, 9, -1], 
+    [-1, -1, -1]
+];
+    const offset = 1; // centro del kernel
+
+    let output = new Uint8ClampedArray(pixels.length);
+
+    for (let y = offset; y < canvas.height - offset; y++) {
+        for (let x = offset; x < canvas.width - offset; x++) {
+        let accR = 0, accG = 0, accB = 0;
+
+        for (let ky = 0; ky < 3; ky++) {
+            for (let kx = 0; kx < 3; kx++) {
+            const xn = x + kx - offset;
+            const yn = y + ky - offset;
+            const index = (yn * canvas.width + xn) * 4;
+
+            accR += pixels[index]     * kernel[ky][kx];
+            accG += pixels[index + 1] * kernel[ky][kx];
+            accB += pixels[index + 2] * kernel[ky][kx];
+            }
+        }
+
+        const outIndex = (y * canvas.width + x) * 4;
+        output[outIndex]     = Math.min(255, Math.max(0, accR));
+        output[outIndex + 1] = Math.min(255, Math.max(0, accG));
+        output[outIndex + 2] = Math.min(255, Math.max(0, accB));
+        output[outIndex + 3] = 255;
+        }
+    }
+
+    const resultImage = new ImageData(output, canvas.width, canvas.height);
+    ctx.putImageData(resultImage, 0, 0);
+    }
+
 
 }

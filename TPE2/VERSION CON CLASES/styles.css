@@ -57,6 +57,12 @@ header {
     box-shadow: 0 0 8px  rgba(68, 2, 19, 0.655);
 }
 
+.tool.active {
+    background: rgb(123, 17, 43);
+    box-shadow: 0 0 15px  rgba(68, 2, 19, 0.655);
+    color: rgb(253, 96, 120);
+}
+
 /* Estilo general del input */
 .sizeInput {
     width: 100%;
