@@ -29,7 +29,7 @@ class App {
         document.getElementById("saveBtn").onclick = () => this.saveImage();
         document.getElementById("uploadInput").onchange = (e) => this.loadImage(e);
 
-        // UI Menús
+        // Menús de filtros desplegable
         document.getElementById("toggleFiltros").onclick = () => {
         document.getElementById("filtrosMenu").classList.toggle("open");
         };
@@ -42,7 +42,7 @@ class App {
             Filter.aplicarFiltroBrillo(this.paint, valorBrillo);
         };*/
 
-           document.getElementById("btn-FiltroBrillo").onclick = () => {
+        document.getElementById("btn-FiltroBrillo").onclick = () => {
             this.paint.saveState();
             //le doy un valor fijo de aumento de brillo cada vez que hace click
             const valorBrillo = 10;
@@ -100,15 +100,14 @@ class App {
         };
     }
 
+    //funcion para guarda la imagen creada por el usuario
     saveImage() {
     // Pedirle el nombre al usuario mediante una ventana emergente
     let nombreArchivo = prompt("Ingresa el nombre para tu dibujo:");
-    if (nombreArchivo === null) 
-        return;
     if (nombreArchivo.trim() === "") {
         nombreArchivo = "sin-titulo";
     }
-    // Crear el enlace de descarga como ya lo hacías
+    // Crear el enlace de descarga
     const link = document.createElement("a");    
     // Usamos el nombre que eligió el usuario + la extensión
     link.download = `${nombreArchivo}.jpeg`;
@@ -117,6 +116,7 @@ class App {
     link.click();
 }
 
+    //funcion para cargar una imagen al canvas desde la pc del usuario
     loadImage(e) {
         const file = e.target.files[0];
         if (!file) return;

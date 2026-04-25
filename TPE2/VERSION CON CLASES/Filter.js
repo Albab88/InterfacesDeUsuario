@@ -2,213 +2,152 @@ class Filter {
     static getImageData(paint) {
         return paint.ctx.getImageData(0, 0, paint.canvas.width, paint.canvas.height);
     }
-
-   /* // En filter.js
-static aplicarFiltroBrillo(paint, valorBrillo, originalImageData) {
-    if (!originalImageData) return;
-
-    const ctx = paint.ctx;
-    const canvas = paint.canvas;
     
-    // Creamos una nueva instancia de ImageData basada en la original para no sobrescribir la original
-    let nuevaImagen = new ImageData(
-        new Uint8ClampedArray(originalImageData.data), 
-        originalImageData.width, 
-        originalImageData.height
-    );
 
-    for (let i = 0; i < nuevaImagen.data.length; i += 4) {
-        // Aplicamos el brillo SIEMPRE partiendo de los valores originales
-        nuevaImagen.data[i]     = this.rangoColor(originalImageData.data[i] + valorBrillo);     // R
-        nuevaImagen.data[i + 1] = this.rangoColor(originalImageData.data[i + 1] + valorBrillo); // G
-        nuevaImagen.data[i + 2] = this.rangoColor(originalImageData.data[i + 2] + valorBrillo); // B
-        // El Alpha (i+3) se mantiene igual
-    }
-
-    ctx.putImageData(nuevaImagen, 0, 0);
-}*/
-
-// filtro de brillo este es el que anda
-    //genero un metodo auxiliar para que el color se quede entre 0 y 255, evitando que se sobrepase el limite
-    static rangoColor(valor) {
-        if(valor < 0) return 0;
-        if(valor > 255) return 255;
-        return valor;
-    }
-
+// filtro de brillo
     static aplicarFiltroBrillo(paint, valorBrillo) {
         const ctx = paint.ctx;
         const canvas = paint.canvas;
         let imageData = this.getImageData(paint);
-        let originalImageData = imageData.data;
-
         for(let i = 0; i < imageData.data.length; i += 4){
             imageData.data[i] = Math.min(255, imageData.data[i] + valorBrillo); // R
             imageData.data[i + 1] = Math.min(255, imageData.data[i + 1] + valorBrillo); // G
             imageData.data[i + 2] = Math.min(255, imageData.data[i + 2] + valorBrillo); // B
         }
         paint.ctx.putImageData(imageData, 0, 0);
-        //volver al valor original del brillo
-        ctx.putImageData(this.ImageData, 0, 0);
-
     }
-    /*static aplicarFiltroBrillo(paint, valorBrillo) {
-    const ctx = paint.ctx;
-    const canvas = paint.canvas;
-
-    // Guardar la imagen original una sola vez
-    if (!this.originalImageData) {
-        this.originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    }
-
-    // Clonar la imagen original para aplicar el filtro
-    let imageData = new ImageData(
-        new Uint8ClampedArray(this.originalImageData.data),
-        this.originalImageData.width,
-        this.originalImageData.height
-    );
-
-    for (let i = 0; i < imageData.data.length; i += 4) {
-        imageData.data[i] = Math.min(255, imageData.data[i] + valorBrillo);     // R
-        imageData.data[i + 1] = Math.min(255, imageData.data[i + 1] + valorBrillo); // G
-        imageData.data[i + 2] = Math.min(255, imageData.data[i + 2] + valorBrillo); // B
-    }
-
-    ctx.putImageData(imageData, 0, 0);
-}
- */
 
 //el filtro es blanco y negro
-        static aplicarFiltroBN(paint) {
-            const ctx = paint.ctx;
-            const canvas = paint.canvas;
-            let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    static aplicarFiltroBN(paint) {
+        const ctx = paint.ctx;
+        const canvas = paint.canvas;
+        let imageData = this.getImageData(paint);
 
-            let index;
-            let r, g, b;
-            let promedio;
+        let index;
+        let r, g, b;
+        let promedio;
 
-            for(let i = 0; i < canvas.height ; i++){
-                for(let j = 0; j < canvas.width; j++){
-                    index = (i * canvas.width + j) * 4;
+        for(let i = 0; i < canvas.height ; i++){
+            for(let j = 0; j < canvas.width; j++){
+                index = (i * canvas.width + j) * 4;
 
-                    r = imageData.data[index];
-                    g = imageData.data[index + 1];
-                    b = imageData.data[index + 2];
-                    promedio = parseInt((r + g + b) / 3);
+                r = imageData.data[index];
+                g = imageData.data[index + 1];
+                b = imageData.data[index + 2];
+                promedio = parseInt((r + g + b) / 3);
 
-                    imageData.data[index] = promedio;
-                    imageData.data[index + 1] = promedio;
-                    imageData.data[index + 2] = promedio;
-                }
+                imageData.data[index] = promedio;
+                imageData.data[index + 1] = promedio;
+                imageData.data[index + 2] = promedio;
             }
-            //genera la nueva imagen con el filtro aplicado
-            ctx.putImageData(imageData, 0, 0);
         }
-
-    //filtro para binarizar
-static aplicarFiltroBinarizacion(paint) {
-    const ctx = paint.ctx;
-    const canvas = paint.canvas;
-    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-    for (let y = 0; y < imageData.height; y++) {
-        for (let x = 0; x < imageData.width; x++) {
-            let index = (y * imageData.width + x) * 4;
-            let r = imageData.data[index];
-            let g = imageData.data[index + 1];
-            let b = imageData.data[index + 2];
-            let value = (r + g + b) / 3; // promedio
-            //determina hasta que valor se vuelve blanco y hasta que valor se vuelve negro
-            if (value < 128) {
-                value = 0;
-            } else {
-                value = 255;
-            }
-
-            imageData.data[index]     = value; // R
-            imageData.data[index + 1] = value; // G
-            imageData.data[index + 2] = value; // B
-            // mantenemos el alfa igual
-        }
+        //genera la nueva imagen con el filtro aplicado
+        ctx.putImageData(imageData, 0, 0);
     }
 
-    ctx.putImageData(imageData, 0, 0);
-}
+    //filtro para binarizar
+    static aplicarFiltroBinarizacion(paint) {
+        const ctx = paint.ctx;
+        const canvas = paint.canvas;
+        let imageData = this.getImageData(paint);
+
+        for (let y = 0; y < imageData.height; y++) {
+            for (let x = 0; x < imageData.width; x++) {
+                let index = (y * imageData.width + x) * 4;
+                let r = imageData.data[index];
+                let g = imageData.data[index + 1];
+                let b = imageData.data[index + 2];
+                let value = (r + g + b) / 3; // promedio
+                //determina hasta que valor se vuelve blanco y hasta que valor se vuelve negro
+                if (value < 128) {
+                    value = 0;
+                } else {
+                    value = 255;
+                }
+
+                imageData.data[index]     = value; // R
+                imageData.data[index + 1] = value; // G
+                imageData.data[index + 2] = value; // B
+                // mantenemos el alfa igual
+            }
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+    }
 
 
     //filtro sepia
-        static aplicarFiltroSepia(paint) {
-            const ctx = paint.ctx;
-            const canvas = paint.canvas;
-            let imageData = this.getImageData(paint);
-            for(let i = 0; i < imageData.data.length; i += 4){
-                let r = imageData.data[i];
-                let g = imageData.data[i + 1];
-                let b = imageData.data[i + 2];
-                imageData.data[i] = Math.min(255, 0.393 * r + 0.769 * g + 0.189 * b);
-                imageData.data[i + 1] = Math.min(255, 0.349 * r + 0.686 * g + 0.168 * b);
-                imageData.data[i + 2] = Math.min(255, 0.272 * r + 0.534 * g + 0.131 * b);
-            }
-            paint.ctx.putImageData(imageData, 0, 0);
+    static aplicarFiltroSepia(paint) {
+        const ctx = paint.ctx;
+        const canvas = paint.canvas;
+        let imageData = this.getImageData(paint);
+        for(let i = 0; i < imageData.data.length; i += 4){
+            let r = imageData.data[i];
+            let g = imageData.data[i + 1];
+            let b = imageData.data[i + 2];
+            imageData.data[i] = Math.min(255, 0.393 * r + 0.769 * g + 0.189 * b);
+            imageData.data[i + 1] = Math.min(255, 0.349 * r + 0.686 * g + 0.168 * b);
+            imageData.data[i + 2] = Math.min(255, 0.272 * r + 0.534 * g + 0.131 * b);
         }
+        paint.ctx.putImageData(imageData, 0, 0);
+    }
 
 
     //filtro todo rojo
-        static aplicarFiltroRojo(paint) {
-            const ctx = paint.ctx;
-            const canvas = paint.canvas;
-            let imageData = paint.ctx.getImageData(0, 0, paint.canvas.width, paint.canvas.height);
-            let index;
-            let r;
-            for(let y = 0; y < paint.canvas.height ; y++){
-                for(let x = 0; x < paint.canvas.width; x++){
-                    index = (y * paint.canvas.width + x) * 4;
-                    r = imageData.data[index];
-                    imageData.data[index] = r;
-                    imageData.data[index + 1] = 0;
-                    imageData.data[index + 2] = 0;
-                    }
+    static aplicarFiltroRojo(paint) {
+        const ctx = paint.ctx;
+        const canvas = paint.canvas;
+        let imageData = this.getImageData(paint);
+        let index;
+        let r;
+        for(let y = 0; y < paint.canvas.height ; y++){
+            for(let x = 0; x < paint.canvas.width; x++){
+                index = (y * paint.canvas.width + x) * 4;
+                r = imageData.data[index];
+                imageData.data[index] = r;
+                imageData.data[index + 1] = 0;
+                imageData.data[index + 2] = 0;
+            }
         }
         paint.ctx.putImageData(imageData, 0, 0);
 }
 
     //filtro todo verde
-        static aplicarFiltroVerde(paint) {
-            const ctx = paint.ctx;
-            const canvas = paint.canvas;
-            let imageData = paint.ctx.getImageData(0, 0, paint.canvas.width, paint.canvas.height);
-            let index;
-            let g;
-            for(let y = 0; y < paint.canvas.height ; y++){
-                for(let x = 0; x < paint.canvas.width; x++){
-                    index = (y * paint.canvas.width + x) * 4;
-                    g = imageData.data[index];
-                    imageData.data[index] = 0;
-                    imageData.data[index + 1] = g;
-                    imageData.data[index + 2] = 0;
-                    }
+    static aplicarFiltroVerde(paint) {
+        const ctx = paint.ctx;
+        const canvas = paint.canvas;
+        let imageData = this.getImageData(paint);
+        let index;
+        let g;
+        for(let y = 0; y < paint.canvas.height ; y++){
+            for(let x = 0; x < paint.canvas.width; x++){
+                index = (y * paint.canvas.width + x) * 4;
+                g = imageData.data[index];
+                imageData.data[index] = 0;
+                imageData.data[index + 1] = g;
+                imageData.data[index + 2] = 0;
+            }
         }
         paint.ctx.putImageData(imageData, 0, 0);
     }
 
-        //filtro todo azul
-            static aplicarFiltroAzul(paint) {
-                const ctx = paint.ctx;
-                const canvas = paint.canvas;
-                let imageData = paint.ctx.getImageData(0, 0, paint.canvas.width, paint.canvas.height);
-                let index;
-                let b;
-                for(let y = 0; y < paint.canvas.height ; y++){
-                    for(let x = 0; x < paint.canvas.width; x++){
-                        index = (y * paint.canvas.width + x) * 4;
-                        b = imageData.data[index];
-                        imageData.data[index] = 0;
-                        imageData.data[index + 1] = 0;
-                        imageData.data[index + 2] = b;
-                        }
+    //filtro todo azul
+    static aplicarFiltroAzul(paint) {
+        const ctx = paint.ctx;
+        const canvas = paint.canvas;
+        let imageData = this.getImageData(paint);
+        let index;
+        let b;
+        for(let y = 0; y < paint.canvas.height ; y++){
+            for(let x = 0; x < paint.canvas.width; x++){
+                index = (y * paint.canvas.width + x) * 4;
+                b = imageData.data[index];
+                imageData.data[index] = 0;
+                imageData.data[index + 1] = 0;
+                imageData.data[index + 2] = b;
             }
-            paint.ctx.putImageData(imageData, 0, 0);
+        }
+    paint.ctx.putImageData(imageData, 0, 0);
     }
 
     
@@ -216,7 +155,7 @@ static aplicarFiltroBinarizacion(paint) {
         static aplicarFiltroNegativo(paint) {
             const ctx = paint.ctx;
             const canvas = paint.canvas;
-            let imageData = paint.ctx.getImageData(0, 0, paint.canvas.width, paint.canvas.height);
+            let imageData = this.getImageData(paint);
             for(let i = 0; i < imageData.data.length; i += 4){
                 imageData.data[i] = 255 - imageData.data[i];
                 imageData.data[i + 1] = 255 - imageData.data[i + 1];
@@ -229,7 +168,7 @@ static aplicarFiltroBinarizacion(paint) {
         static aplicarFiltroBlur(paint) {
             const ctx = paint.ctx;
             const canvas = paint.canvas;
-            let imageData = paint.ctx.getImageData(0, 0, paint.canvas.width, paint.canvas.height);
+            let imageData = this.getImageData(paint);
             let copiaimageData = paint.ctx.createImageData(paint.canvas.width, paint.canvas.height);
             //agregar la matriz del kernel
             let kernelSize = 3;
@@ -272,7 +211,7 @@ static aplicarFiltroBinarizacion(paint) {
     static aplicarFiltroBordes(paint) {
     const canvas = paint.canvas;       // el canvas dentro de tu objeto paint
     const ctx = paint.ctx;             // el contexto que ya usás en paint
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let imageData = this.getImageData(paint);
     const pixels = imageData.data;
 
     // Escala de grises
@@ -327,15 +266,9 @@ static aplicarFiltroBinarizacion(paint) {
     static aplicarFiltroDetalles(paint) {
     const canvas = paint.canvas;
     const ctx = paint.ctx;
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let imageData = this.getImageData(paint);
     const pixels = imageData.data;
-
-   /* const kernel = [
-    [0, -1, 0],
-    [-1, 5, -1],
-    [0, -1, 0]
-    ];*/
-
+//kernel con valor central alto y diferencia mayor para que haya mayor diferencia entre los bordes y el resto de la imagen
    const kernel = [
     [-1, -1, -1], 
     [-1, 9, -1], 

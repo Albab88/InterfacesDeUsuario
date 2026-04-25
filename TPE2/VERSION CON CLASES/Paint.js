@@ -12,7 +12,8 @@ class Paint {
         this.drawing = false;
         this.color = "#000000";
         this.brushSize = 5;
-        this.history = [];
+        //arreglo del historial de cambios para deshacer
+        this.history = []; 
     }
 
     //funcion para comenzar a dibujar
@@ -28,10 +29,6 @@ class Paint {
 
         this.ctx.lineWidth = this.brushSize;
         this.ctx.lineCap = "round";
-
-         // Primero quitamos la clase "active" de todos los botones de herramientas
-        //document.getElementById("pencilBtn").classList.remove("active");
-        //document.getElementById("eraserBtn").classList.remove("active");
 
         if (this.currentTool === "eraser") {
             //dejar marcado el boton de la goma
@@ -57,6 +54,7 @@ class Paint {
         this.ctx.closePath();
     }
 
+    //funcion para guardar el estado actual del canvas en el historial que nos permite deshacer cambios
     saveState() {
         this.history.push(this.canvas.toDataURL());
         if (this.history.length > 20) this.history.shift();
@@ -67,11 +65,14 @@ class Paint {
         document.getElementById("pencilBtn").classList.remove("active");
         document.getElementById("eraserBtn").classList.remove("active");
         document.getElementById("saveBtn").classList.remove("active");
-        if (this.history.length === 0) {
-            // Si no hay historial, simplemente limpia el canvas
+        if (this.history.length === 1) {
+            if (!confirm("¿Estás seguro de que quieres deshacer? Dejarás el lienzo en blanco.")) {
+                return;
+            }
+            // Si no hay historial, limpia el canvas
             this.clear();
             return;
-        }
+        };
         const img = new Image();
         img.src = this.history.pop();
         img.onload = () => {
