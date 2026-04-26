@@ -7,15 +7,17 @@ class App {
     }
 
     initEventListeners() {
-        const { canvas } = this.paint;
+        const { canvas, filterManager } = this.paint;
 
-        // Eventos de Mouse
-        canvas.addEventListener("mousedown", (e) => this.paint.startDrawing(e.offsetX, e.offsetY));
-        canvas.addEventListener("mousemove", (e) => this.paint.draw(e.offsetX, e.offsetY));
-        canvas.addEventListener("mouseup", () => this.paint.stopDrawing());
-        canvas.addEventListener("mouseleave", () => this.paint.stopDrawing());
+        //  --- MANEJO DE EVENTOS ---
 
-        // Botones de Herramientas
+        // Mouse Events
+        canvas.onmousedown = (e) => this.paint.startDrawing(e.offsetX, e.offsetY);
+        canvas.onmousemove = (e) => this.paint.draw(e.offsetX, e.offsetY);
+        canvas.onmouseup = () => this.paint.stopDrawing();
+        canvas.onmouseleave = () => this.paint.stopDrawing();
+
+        // Herramientas básicas
         document.getElementById("pencilBtn").onclick = () => this.paint.setTool("pencil");
         document.getElementById("eraserBtn").onclick = () => this.paint.setTool("eraser");
         document.getElementById("undoBtn").onclick = () => this.paint.undo();
@@ -27,71 +29,75 @@ class App {
 
         // Guardar y Cargar
         document.getElementById("saveBtn").onclick = () => this.saveImage();
-        document.getElementById("uploadInput").onchange = (e) => this.loadImage(e);
+        document.getElementById("uploadInput").onchange = (e) => {
+            this.paint.saveState();
+            this.loadImage(e);
+            e.target.value = "";
+        };
 
         // Menús de filtros desplegable cuando se hace click
         document.getElementById("toggleFiltros").onclick = () => {
             document.getElementById("filtrosMenu").classList.toggle("open");
         };
 
-        // Filtros
+        // Filtros (Llamando a la instancia)
         document.getElementById("btn-FiltroBrillo").onclick = () => {
             this.paint.saveState();
-            //le doy un valor fijo de aumento de brillo cada vez que hace click
-            const valorBrillo = 10;
-            Filter.aplicarFiltroBrillo(this.paint, valorBrillo);
+            filterManager.aplicarFiltroBrillo(10);
         };
 
         document.getElementById("btn-FiltroBN").onclick = () => {
             this.paint.saveState();      // Primero Paint guarda el historial
-            Filter.aplicarFiltroBN(this.paint); // Luego la clase estática procesa
+            filterManager.aplicarFiltroBN(); // Luego la clase estática procesa
         };
 
         document.getElementById("btn-FiltroBinarizacion").onclick = () => {
             this.paint.saveState();
-            Filter.aplicarFiltroBinarizacion(this.paint);
-        }
+            filterManager.aplicarFiltroBinarizacion();
+        };
 
         document.getElementById("btn-FiltroSepia").onclick = () => {
             this.paint.saveState();
-            Filter.aplicarFiltroSepia(this.paint);
+            filterManager.aplicarFiltroSepia();
+        };
+
+        document.getElementById("btn-FiltroNegativo").onclick = () => {
+            this.paint.saveState();
+            filterManager.aplicarFiltroNegativo();
         };
 
         document.getElementById("btn-FiltroRojo").onclick = () => {
             this.paint.saveState();
-            Filter.aplicarFiltroRojo(this.paint);
-        }
+            filterManager.aplicarFiltroRojo();
+        };
 
         document.getElementById("btn-FiltroVerde").onclick = () => {
             this.paint.saveState();
-            Filter.aplicarFiltroVerde(this.paint);
+            filterManager.aplicarFiltroVerde();
         }
 
         document.getElementById("btn-FiltroAzul").onclick = () => {
             this.paint.saveState();
-            Filter.aplicarFiltroAzul(this.paint);
-        }
-
-        document.getElementById("btn-FiltroNegativo").onclick = () => {
-            this.paint.saveState();
-            Filter.aplicarFiltroNegativo(this.paint);
-        }
+            filterManager.aplicarFiltroAzul();
+        };
 
         document.getElementById("btn-FiltroBlur").onclick = () => {
             this.paint.saveState();
-            Filter.aplicarFiltroBlur(this.paint);
+            filterManager.aplicarFiltroBlur();
         };
 
         document.getElementById("btn-FiltroBordes").onclick = () => {
             this.paint.saveState();
-            Filter.aplicarFiltroBordes(this.paint);
+            filterManager.aplicarFiltroBordes();
         };
 
         document.getElementById("btn-FiltroDetalles").onclick = () => {
             this.paint.saveState();
-            Filter.aplicarFiltroDetalles(this.paint);
+            filterManager.aplicarFiltroDetalles();
         };
     }
+
+    // --- FIN DE MANEJO DE EVENTOS ---
 
     //funcion para guarda la imagen creada por el usuario
     saveImage() {
@@ -117,14 +123,13 @@ class App {
         reader.onload = (event) => {
             const img = new Image();
             img.onload = () => {
-                this.paint.saveState();
                 this.paint.ctx.drawImage(img, 0, 0, this.paint.canvas.width, this.paint.canvas.height);
             };
             img.src = event.target.result;
         };
         reader.readAsDataURL(file);
     }
+
 }
 
-// Inicialización
 new App();
