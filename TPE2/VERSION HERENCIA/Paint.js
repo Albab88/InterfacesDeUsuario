@@ -73,9 +73,11 @@ class Paint {
     }
 
     clear(save = true) {
-        if (save && !confirm("¿Borrar todo?"))
+        if (save && !confirm("¿Estás seguro de que quieres borrar? Perderás todos los cambios."))
             return;
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.globalCompositeOperation = "source-over";
+        this.currentTool = "pencil"; // Volvemos al lápiz por defecto
         this.history = [];
         /*const undoBtn = document.getElementById("undoBtn");
         if (undoBtn) {

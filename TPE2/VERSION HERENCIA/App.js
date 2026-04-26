@@ -123,7 +123,9 @@ class App {
         reader.onload = (event) => {
             const img = new Image();
             img.onload = () => {
+                this.paint.ctx.globalCompositeOperation = "source-over";
                 this.paint.ctx.drawImage(img, 0, 0, this.paint.canvas.width, this.paint.canvas.height);
+                e.target.vakue = "";
             };
             img.src = event.target.result;
         };
