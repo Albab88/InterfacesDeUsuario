@@ -263,11 +263,11 @@ class Filter {
         const height = this.paint.canvas.height;
         const pixels = imageData.data;
 
-        // Kernel de realce con valor central alto y valores alrededor negativos para mas doferencia
+        // kernel de realce de detalles (sharpen)
         const kernel = [
-            [-1, -1, -1],
-            [-1, 9, -1],
-            [-1, -1, -1]
+            [ 0, -1,  0],
+            [-1,  5, -1],
+            [ 0, -1,  0]
         ];
 
         let output = new Uint8ClampedArray(pixels.length);
